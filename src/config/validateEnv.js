@@ -24,6 +24,17 @@ const optionalEnvVars = [
   "PAYOUT_ADMIN_USER_IDS",
   "ACCESS_TOKEN_TTL",
   "REFRESH_TOKEN_TTL",
+  // Redis configuration (optional - app works without Redis)
+  "REDIS_URL",
+  "REDIS_HOST",
+  "REDIS_PORT",
+  "REDIS_USERNAME",
+  "REDIS_PASSWORD",
+  "HORIZON_URLS",
+  "HORIZON_TIMEOUT_MS",
+  "HORIZON_MAX_RETRIES",
+  "HORIZON_CB_THRESHOLD",
+  "HORIZON_CB_COOLDOWN_MS",
   "QUEUE_DRIVER",
   "JOBS_ENABLED",
   "JOBS_DASHBOARD_TOKEN",
@@ -36,6 +47,14 @@ const optionalEnvVars = [
   "REDIS_PORT",
   "REDIS_USERNAME",
   "REDIS_PASSWORD",
+  "STELLAR_PLATFORM_PUBLIC_KEY",
+  "ORG_NAME",
+  "ORG_URL",
+  "ORG_DESCRIPTION",
+  "ORG_LOGO",
+  "ORG_TWITTER",
+  "ORG_GITHUB",
+  "SIGNING_KEY",
 ];
 
 export const validateEnv = () => {
@@ -52,6 +71,18 @@ export const validateEnv = () => {
     process.env.ANCHOR_HOME_DOMAINS = "testanchor.stellar.org";
   }
   process.env.ANCHOR_TOML_CACHE_TTL = process.env.ANCHOR_TOML_CACHE_TTL || "3600";
+  // Default values for Horizon resilient client if not provided
+  const network = process.env.STELLAR_NETWORK || "testnet";
+  if (!process.env.HORIZON_URLS) {
+    process.env.HORIZON_URLS =
+      network === "mainnet"
+        ? "https://horizon.stellar.org"
+        : "https://horizon-testnet.stellar.org";
+  }
+  process.env.HORIZON_TIMEOUT_MS = process.env.HORIZON_TIMEOUT_MS || "10000";
+  process.env.HORIZON_MAX_RETRIES = process.env.HORIZON_MAX_RETRIES || "3";
+  process.env.HORIZON_CB_THRESHOLD = process.env.HORIZON_CB_THRESHOLD || "5";
+  process.env.HORIZON_CB_COOLDOWN_MS = process.env.HORIZON_CB_COOLDOWN_MS || "30000";
 
   const missing = [];
 
